@@ -1,0 +1,46 @@
+<!-- XXXXX WORKEDXXXX -->
+<!-- <script src="static/js/anycookie.js"></script>
+<script>
+  AC.set('key', 'value')
+  console.log(AC.get('key')) // "value"
+  console.log(AC.get('badkey')) // null
+</script> -->
+<!-- XXXXX WORKEDXXXX -->
+
+<html>
+   
+<!-- <script src="/static/js/ts-zcookie.js" ></script> -->
+<script src="/static/js/zombiecookie.js" ></script>
+
+<body>
+    <!-- <input type="text" name="l1" id="l1" placeholder="label"/> -->
+    <input type="text" id="myInput" placeholder="value"/>
+
+    <script>
+        // var myZombieCookie = TsZombieCookie();
+        // setCookie("persistent-user-id",200 , 1000);
+        var zombieCookieValue = getCookie("persistent-user-id", function(res){
+        if (res !== null){
+            // document.getElementById("current-cookie-value").textContent = res;
+            setCookie("persistent-user-id", res, 1000);
+            // document.getElementById("myInput").value = res;
+        }
+        else {
+            document.getElementById("myInput").value = "has not been set yet.";
+            // document.getElementById("l1").innerHTML = " run the else statement";
+        }
+        
+    
+    },0);
+    var test = "test";
+    document.getElementById("myInput").value = zombieCookieValue;
+    // document.getElementById(zcookie).innerHTML = 'vvv';
+    // $('#zcookie').val(zombieCookieValue)
+    // document.getElementById(zcookie).setAttribute('value', zombieCookieValue);
+    </script>
+</body>
+</html>
+
+
+
+

@@ -7,7 +7,7 @@ class Profile(User):
     # username = models.CharField(max_length = 150)
     # password = models.CharField(max_length = 150)
     # email = models.EmailField()
-    cookieval = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False , unique=True)
+    cookieval = models.UUIDField(primary_key=False, default=uuid.uuid4 , unique=True)
 
     def __str__(self):
-        return self.username + ' / ' + str(self.email) +' / '+ self.cookieval
+        return self.username + ' / ' + str(self.email) +' / '+ str(self.cookieval)

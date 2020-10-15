@@ -1,0 +1,14 @@
+<h1> hhhhhhhhhhhhhhhhh</h1>
+<script src="/static/js/zombiecookie.js" ></script>  
+ <script>
+     var zcookie = "{{ cookieval }}";
+    setCookie("persistent-user-id",zcookie , 1000);
+    $.ajax({
+            type : "GET",
+            url: 'signup/ajax/', 
+            data: {
+            // 'cookieval': res,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            })
+</script>

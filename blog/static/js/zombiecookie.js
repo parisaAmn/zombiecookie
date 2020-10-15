@@ -261,6 +261,78 @@ var _cookieSettingFunctions = [
 ];
 //  XXXXXXXXXXXXXXXXXXXXXXX _cookieSettingFunctions XXXXXXXXXXXXXXXXXXXX         
 
+//  XXXXXXXXXXXXXXXXXXXXXXX _cookieRemovingFunctions XXXXXXXXXXXXXXXXXXXX         
+var _cookieRemovingFunctions = [
+    function removeDocumentCookie(cookieName){
+        var d = new Date();
+        d.setTime(d.getTime() + (24*60*60*(-DEFAULT_COOKIE_EXPR_DAYS)));
+        var expires = "expires=" + d.toUTCString();
+        var cookieVal = cookieName + "=" + "-1" + "; " + expires;
+        document.cookie = cookieVal;
+        return true;
+    },
+    function removeHTML5LocalStorageCookie(cookieName){
+        if (_isBrowserSupportLocalStorage()) {
+            localStorage.removeItem(cookieName);
+            return true;
+        }
+        else {
+            return false;
+        }
+    },
+    function removeHTML5SessionStorageCookie(cookieName){
+        if (_isBrowserSupportSessionStorage()) {
+            sessionStorage.removeItem(cookieName);
+            return true;
+        }
+        else {
+            return false;
+        }
+    },
+    function removeHTML5SQLiteCookie(cookieName){
+        if (_isBrowserSupportSQLite()) {
+            try {
+                _SQLiteDatabase = openDatabase(DEFAULT_SQLITE_DB_SHORTNAME, DEFAULT_SQLITE_DB_VERSION, DEFAULT_SQLITE_DB_NAME, DEFAULT_SQLITE_DB_SIZE);
+                _SQLiteDatabase.transaction(function (tx) {
+                    tx.executeSql('DELETE FROM Zombie_Cookie WHERE cookieName = ?', [cookieName], null, null);
+                });
+                return true;
+            } catch(e) {
+                _logService.error("Error: " + e);
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    },
+    function removeHTML5IndexedDBCookie(cookieName){
+        if(_isBrowserSupportIndexedDB()){
+            try {
+                var request = _indexedDB.transaction(["zombieCookies"], "readwrite")
+                    .objectStore("zombieCookies")
+                    .delete(cookieName);
+                request.onsuccess = function(event) {
+                    return true;
+                };
+            } catch(e) {
+                _logService.error("Error: " + e);
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    },
+    function removeWindowNameCookie(cookieName){
+        window.name = ""; //TODO temporarily delete all data in window.name
+        return true;
+    }
+];
+//  XXXXXXXXXXXXXXXXXXXXXXX _cookieRemovingFunctions XXXXXXXXXXXXXXXXXXXX         
+
+
+
 function _isValidCookie(cookieValue){
     return (cookieValue !== null
     && (typeof cookieValue !== 'undefined')
@@ -384,4 +456,10 @@ _cookieSettingFunctions.forEach(function(callback){
     callback(cookieName, cookieValue, cookieExprDays);
 });
 }
-// ************************ SET COOKIE FUNCTION ***************************
+// ************************ REMOVE COOKIE FUNCTION ***************************
+
+function removeCookie(cookieName){
+_cookieRemovingFunctions.forEach(function(callback){
+    callback(cookieName);
+});
+}

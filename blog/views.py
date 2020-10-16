@@ -1,5 +1,5 @@
 from django.contrib.auth import login, authenticate , logout
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
 from .forms import SignUpForm , SignInForm
 from django.http import HttpResponse
 from .models import Profile
@@ -19,22 +19,6 @@ def set(request):
 
 def clearcookie(request):
     return render(request , 'blog/clear.html')
-
-# def index(request):
-#     if request.COOKIES.get('persistent-user-id') is not None : 
-#         zcookie = request.COOKIES.get('persistent-user-id')
-#         print(zcookie)
-#         zcookie = uuid.UUID(zcookie)
-#         number = Profile.objects.filter(cookieval = zcookie).count()
-#         if number == 1:
-#             user = Profile.objects.filter(cookieval = zcookie)
-#             user.backend = 'django.contrib.auth.backends.ModelBackend'
-#             login(request , user)
-#             return render(request , 'blog/index.html' , {'comefrom':'index'})
-#     else: # cookie didn't find
-#         return render(request , 'blog/index.html' , {'comefrom':'index'})
-
-#     return render(request , 'blog/index.html' , {'comefrom':'index'})
 
 def index(request):
     print('index function')
@@ -103,8 +87,6 @@ def signin(request):
                 print("user loged in")
                 messages.info(request , str(zcookie) , extra_tags='signin')
                 return redirect('index')
-                # messages.info(request, f"You are now logged in as {username}")
-                # render(request, 'blog/index.html', {'comefrom': 'signin', 'cookieval':str(zcookie)})
             else:
                 messages.error(request, "Invalid username or password.")
                 return render(request, 'blog/signin.html', {'form': form})
@@ -124,6 +106,36 @@ def contact(request):
 def signout(request):
     print('sign out func')
     logout(request)
-    # messages.info(request, "Logged out successfully!")
+    messages.info(request , "signout" , extra_tags='signout')
     return render(request , "blog/logout.html")
 
+def ajaxx(request):
+    print('ajax func')
+    if request.is_ajax() and request.method == 'GET':
+        print('request is ajax and get')
+        if request.COOKIES.get('persistent-user-id') is not None :
+            print('zcookie exists')
+            zcookie = request.COOKIES.get('persistent-user-id', None)
+            print(zcookie)
+            if zcookie is not None:
+                print('zcookie is not None')
+                zcookie = uuid.UUID(zcookie)
+                print('zcookie converted to UUID')
+                number = Profile.objects.filter(cookieval = zcookie).count()
+                print('calculate if there is a user with this cookie in database')
+                if number == 1:
+                    print('there is a user in DB')
+                    user = Profile.objects.get(cookieval = zcookie)
+                    print('get user with that cookie value')
+                    user.backend = 'django.contrib.auth.backends.ModelBackend'
+                    login(request , user)
+                    print('user logged in')
+                    return render(request , 'blog/index.html')
+                else:
+                    return render(request , 'blog/index.html')
+            else:
+                return render(request , 'blog/index.html')
+        else:
+            return render(request , 'blog/index.html')
+    else:
+        return render(request , 'blog/index.html')

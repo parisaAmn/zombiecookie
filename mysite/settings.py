@@ -104,7 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = [
 'django.contrib.auth.backends.ModelBackend',
-# 'yourapp.backends.HashedPasswordAuthBackend',
+# 'blog.backends.HashedPasswordAuthBackend',
 ]
 
 

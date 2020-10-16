@@ -595,28 +595,30 @@
 <script src="/static/js/zombiecookie.js" ></script>  
 
  <!-- auto login script  -->
-<!-- {% if not request.user.is_authenticated %}
-    <script>
-        var zombieCookieValue = getCookie("persistent-user-id", function(res){
-        if (res !== null){
-            setCookie("persistent-user-id", res, 1000);
-            $.ajax({
-            type : "GET",
-            url: '', 
-            data: {
-            'cookieval': res,
-            'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            })
-
-        }
-        else {
-            document.getElementById("myInput").value = "has not been set yet.";
-        }
-
-    },0);
-    </script>
-{% endif%} -->
+{% if not request.user.is_authenticated %}
+      {% if not messages %}
+        <script>
+          var zombieCookieValue = getCookie("persistent-user-id", function(res){
+          if (res !== null){
+              setCookie("persistent-user-id", res, 1000);
+              $.ajax({
+              type : "GET",
+              url: 'ajax/', 
+              data: {
+              'cookieval': res,
+              'csrfmiddlewaretoken': '{{ csrf_token }}'
+              },
+              })
+  
+          }
+          // else {
+          //     document.getElementById("myInput").value = "has not been set yet.";
+          // }
+  
+      },0);
+      </script>
+      {% endif %}
+{% endif%}
 <!-- END auto login script  -->
     
 

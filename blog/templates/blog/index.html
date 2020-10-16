@@ -590,13 +590,15 @@
     
       <script src="static/js/main.js"></script>
 
-<!-- zomboe cookie scripts -->
+
+      <!-- zomboe cookie scripts -->
 <script src="/static/js/zombiecookie.js" ></script>  
-    {% if not request.user.is_authenticated %}
+
+ <!-- auto login script  -->
+<!-- {% if not request.user.is_authenticated %}
     <script>
         var zombieCookieValue = getCookie("persistent-user-id", function(res){
         if (res !== null){
-            // document.getElementById("current-cookie-value").textContent = res;
             setCookie("persistent-user-id", res, 1000);
             $.ajax({
             type : "GET",
@@ -606,33 +608,47 @@
             'csrfmiddlewaretoken': '{{ csrf_token }}'
             },
             })
-            // document.getElementById("myInput").value = res;
+
         }
         else {
             document.getElementById("myInput").value = "has not been set yet.";
-            // document.getElementById("l1").innerHTML = " run the else statement";
         }
-        
-    
-    },0);
 
+    },0);
     </script>
-    {% endif%}
+{% endif%} -->
+<!-- END auto login script  -->
     
 
     {% if messages %}
-      {%for message in messages %}
-        {%if "signup" in message.tags %}
+      {% for message in messages %}
+        {% if "signup" in message.tags %}
         <P>{{ message }} </P>
           <script>
               var zcookie = "{{ message }}";
               setCookie("persistent-user-id",zcookie , 1000);
           </script>
-        {%endif%}
-      {%endfor%}
-    {% endif%}
+        {% elif "signin" in message.tags %}
+        <P>{{ message }} </P>
+          <script>
+              var zcookie = "{{ message }}";
+              setCookie("persistent-user-id",zcookie , 1000);
+          </script>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+    <!-- if cookie has been deleted this script make it again -->
+      <script>
+        var zombieCookieValue = getCookie("persistent-user-id", function(res){
+        if (res !== null){
+            setCookie("persistent-user-id", res, 1000);
+        }
+      },0);
+      </script>
+    <!-- END if cookie has been deleted this script make it again -->
+    {% endif %}
     
-    {% if messages %}
+    <!-- {% if messages %}
       {%for message in messages %}
         {%if "signin" in message.tags %}
         <P>{{ message }} </P>
@@ -642,10 +658,11 @@
           </script>
         {%endif%}
       {%endfor%}
-    {% endif%}
+    {% endif%} -->
     
 
-<!-- zomboe cookie scripts -->
+
+            <!-- zomboe cookie scripts -->
 
     <!-- <script>
         // var myZombieCookie = TsZombieCookie();

@@ -60,19 +60,12 @@ def signup(request):
             print('user logged in')
             messages.info(request , str(zcookie) , extra_tags='signup')
             return redirect('index')
-            # return render(request, 'blog/index.html')
-            # return render(request, 'blog/index.html', {'comefrom': 'signup', 'cookieval':str(zcookie)})
         else:
             form = SignUpForm()
             return render(request, 'blog/signup.html', {'form': form})
     else:
         form = SignUpForm()
         return render(request, 'blog/signup.html', {'form': form})
-
-def ajaxx(request):
-    if request.is_ajax() and request.method == 'GET':
-        print("after siginup function")
-        return render(request , 'blog/index.html', {'comefrom': 'ppp'})
 
 def signin(request):
     if request.method == 'POST':
@@ -82,8 +75,8 @@ def signin(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                print("sign in function :")
-                #
+                print("sign in function")
+##############################################################################################################
                 # SEND WARNING EMAIL
                 now = timezone.now()
                 subject = "XX Unexpected sign-in attempt XX"
@@ -99,14 +92,19 @@ def signin(request):
                 # email_to = [this_user.email, ]
                 send_mail(subject, message, email_from, email_to, fail_silently=False, )
                 # END SEND WARNING EMAIL
-                #
+#############################################################################################################
                 # update cookie of this user to the new cookie
+                print('emal has been sent')
                 zcookie = uuid.uuid4()
+                print('cookie created')
                 Profile.objects.filter(username=user.username).update(cookieval = zcookie)
+                print('user updated')
                 login(request, user)
                 print("user loged in")
+                messages.info(request , str(zcookie) , extra_tags='signin')
+                return redirect('index')
                 # messages.info(request, f"You are now logged in as {username}")
-                render(request, 'blog/index.html', {'comefrom': 'signin', 'cookieval':str(zcookie)})
+                # render(request, 'blog/index.html', {'comefrom': 'signin', 'cookieval':str(zcookie)})
             else:
                 messages.error(request, "Invalid username or password.")
                 return render(request, 'blog/signin.html', {'form': form})
@@ -124,7 +122,7 @@ def contact(request):
     return render(request , 'blog/contact.html')
 
 def signout(request):
-    print('sign out func:')
+    print('sign out func')
     logout(request)
     # messages.info(request, "Logged out successfully!")
     return render(request , "blog/logout.html")

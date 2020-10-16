@@ -10,6 +10,6 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('clear/' , views.clearcookie, name='clear'),
     # path('set/' , views.set, name='set'),
-    path('ajax/' , views.ajaxx, name='ajaxx'),
+    # path('ajax/' , views.ajaxx, name='ajaxx'),
     
 ]

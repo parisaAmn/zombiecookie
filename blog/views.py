@@ -12,14 +12,6 @@ from django.conf import settings
 
 
 # Create your views here.
-
-def set(request):
-    zcookie = uuid.uuid4()
-    return render(request , 'blog/set.html', {'cookieval':str(zcookie)})
-
-def clearcookie(request):
-    return render(request , 'blog/clear.html')
-
 def index(request):
     print('index function')
     return render (request , 'blog/index.html')
@@ -50,12 +42,6 @@ def signup(request):
     else:
         form = SignUpForm()
         return render(request, 'blog/signup.html', {'form': form})
-    
-def about(request):
-    return render(request , 'blog/about.html')
-
-def contact(request):
-    return render(request , 'blog/contact.html')
 
 def signout(request):
     print('sign out func')
@@ -161,10 +147,10 @@ def signin(request):
                         return redirect('index')
 
             else:#3
-                messages.error(request, "Invalid username or password.")
+                messages.error(request, "نام کاربری یا رمز عبور معتبر نیست")
                 return render(request, 'blog/signin.html', {'form': form})
         else:#2
-            messages.error(request, "Invalid username or password.")
+            messages.error(request, "نام کاربری یا رمز عبور معتبر نیست")
             return render(request, 'blog/signin.html', {'form': form})
     else:#1
         form = SignInForm()

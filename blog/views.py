@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings 
+from django.utils.translation import activate
 
 
 # Create your views here.
@@ -17,6 +18,7 @@ def index(request):
     return render (request , 'blog/index.html')
 
 def signup(request):
+    activate('fa')
     if request.method == "POST":
         print('method is post')
         form = SignUpForm(request.POST)
@@ -37,7 +39,6 @@ def signup(request):
             messages.info(request , str(zcookie) , extra_tags='signup')
             return redirect('index')
         else:
-            form = SignUpForm()
             return render(request, 'blog/signup.html', {'form': form})
     else:
         form = SignUpForm()
@@ -108,6 +109,7 @@ def updatecookie(username , zcookie):
 
 
 def signin(request):
+    activate('fa')
     if request.method == 'POST':#1
         form = SignInForm(request=request, data=request.POST)
         if form.is_valid():#2
